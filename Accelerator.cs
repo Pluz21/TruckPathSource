@@ -11,6 +11,7 @@ public class Accelerator : baseComp
     {
         base.Start();
         playerRef = FindObjectOfType<Truck>();
+
     }
 
     // Update is called once per frame
@@ -24,12 +25,14 @@ public class Accelerator : baseComp
     {
         float _dist = Vector3.Distance(transform.position, playerRef.transform.position);
         Debug.Log($"distance to platform: {_dist}");
-        if (_dist < 4 && hasSetSpeed == false && playerRef.Movement.MoveSpeed <playerRef.Movement.MaxMoveSpeed)
-        { 
+        if (_dist < 4 && hasSetSpeed == false && playerRef.Movement.MoveSpeed < playerRef.Movement.MaxMoveSpeed)
+        {
             playerRef.Movement.MoveSpeed += accelerationRate;
             hasSetSpeed = true;
-        Debug.Log("SETSPEED OK");
+            Debug.Log("SETSPEED OK");
         }
+        else if (_dist > 10)
+            hasSetSpeed = false;
 
     }
 }

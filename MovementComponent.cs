@@ -13,6 +13,8 @@ using static Recorder;
 public class MovementComponent : baseComp
 {
     [SerializeField] int currentIndex = 0;
+
+    [SerializeField] float initialMoveSpeed = 0;
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float maxMoveSpeed = 20;
     [SerializeField] float rotateSpeed = 50;
@@ -28,6 +30,7 @@ public class MovementComponent : baseComp
     //[SerializeField] Vector3 positionAtStartPhantomWalk = Vector3.zero;
 
     [SerializeField] bool canStartTimer = false;
+    [SerializeField] bool canReset = false;
     [SerializeField] bool loopRecord = true;
     [SerializeField] bool canStartReturning = false;
     [SerializeField] bool canStartPhantomWalk = false;
@@ -52,8 +55,8 @@ public class MovementComponent : baseComp
         base.Start();
         OnReturnedToInitialPosition += ActivateCanStartTimer;
         OnTick += ActivateCanStartPhantomWalk;
+        Init();
 
-        recorder = GetComponent<Recorder>();
     }
 
     void Update()
@@ -68,6 +71,15 @@ public class MovementComponent : baseComp
 
         CallIncreaseTime();
         CountDown();
+        if(canReset == true)
+            ResetAll();
+    }
+
+    void Init()
+    {
+
+        recorder = GetComponent<Recorder>();
+        initialMoveSpeed = moveSpeed;
     }
    
     public void Move()
@@ -103,6 +115,7 @@ public class MovementComponent : baseComp
     {
         // CALLED ON R KEYBIND 
         canStartReturning = true;
+        MoveSpeed = moveSpeed;
     }
     public void ReturnToInitialPosition()
     {
@@ -166,6 +179,7 @@ public class MovementComponent : baseComp
             { 
             recorder.AllPositions.Add(_newFirstPos);  // for looping the sequence
             recorder.AllRotations.Add(_newFirstRot);
+                
             }
             recorder.AllPositions.Remove(_newFirstPos);
             recorder.AllRotations.Remove(_newFirstRot);
@@ -210,7 +224,25 @@ public class MovementComponent : baseComp
             Debug.LogError("3");
     }
 
-  
+    void ResetAll()
+    { 
+        canStartTimer = false;
+        canStartReturning = false;
+        canStartPhantomWalk = false;
+        moveSpeed = initialMoveSpeed;
+        canReset = false;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        foreach (Vector3 position in recorder.AllPositions)
+        {
+            if(recorder.AllPositions.Count > 0)
+            Gizmos.DrawWireSphere(position, 0.1f);
+        }
+    }
+
+
 
 
 

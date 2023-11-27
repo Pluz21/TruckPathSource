@@ -230,6 +230,7 @@ public class MovementComponent : baseComp
         canStartReturning = false;
         canStartPhantomWalk = false;
         moveSpeed = initialMoveSpeed;
+        recorder.AllPositions.Clear();
         canReset = false;
     }
     private void OnDrawGizmos()
@@ -239,6 +240,8 @@ public class MovementComponent : baseComp
         {
             if(recorder.AllPositions.Count > 0)
             Gizmos.DrawWireSphere(position, 0.1f);
+            if (canStartPhantomWalk)
+                Gizmos.color = Color.green;
         }
     }
 
